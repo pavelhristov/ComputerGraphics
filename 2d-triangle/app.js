@@ -24,10 +24,10 @@ const fragmentShaderText = [
 ].join('\n');
 
 
-var initGl = function() {
+const start = function() {
     // Initiliazing WebGL
     const canvas = document.getElementById('surface');
-    let gl = initWebGL(canvas);
+    const gl = initWebGL(canvas);
 
     // Setting clear color
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
