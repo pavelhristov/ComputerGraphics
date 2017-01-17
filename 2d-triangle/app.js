@@ -25,12 +25,21 @@ const fragmentShaderText = [
 
 
 const start = function() {
-    // Initiliazing WebGL
+    // Initiliazing WebGL.
     const canvas = document.getElementById('surface');
     const gl = initWebGL(canvas);
 
-    // Setting clear color
+    // Setting clear color.
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    // Enable depth levels.
+    gl.enable(gl.DEPTH_TEST);
+    // Do not draw things out of view.
+    gl.enable(gl.CULL_FACE);
+    gl.frontFace(gl.CCW);
+    gl.cullFace(gl.BACK);
+    // Near things obscure far things.
+    gl.depthFunc(gl.LEQUAL);
+    // Clearing the color and the depth buffer.
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Create Shaders
