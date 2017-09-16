@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebGL2 play</title>
+    <link href="./css/main.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class='wrapper'>
+    <canvas id="surface" width="800" height="600">
+        Your browser does not support HTML5 canvas!
+    </canvas>
+    </div>
+
+    <script type="text/javascript" src="./scripts/gl.js"></script>
+    <script type="text/javascript" src="./scripts/math.js"></script>
+    <script type="text/javascript" src="./scripts/shaders.js"></script>
+    <script type="text/javascript" src="./scripts/render-loop.js"></script>
+    <script type="text/javascript" src="./scripts/transform.js"></script>
+    <script type="text/javascript" src="./scripts/modal.js"></script>
+    <script type="text/javascript" src="./scripts/primitives.js"></script>
+    <script type="text/javascript" src="./scripts/camera.js"></script>
+    <script type="text/javascript" src="./scripts/shaders-extra.js"></script>
+    <script type="text/javascript" src="./scripts/main.js"></script>
+
+    <script id="vertex_shader" type="x-shader/x-vertex">#version 300 es
+        in vec3 a_position; // Standard position data
+        in vec2 a_uv;
+        
+        uniform mat4 uPMatrix;
+        uniform mat4 uMVMatrix;
+        uniform mat4 uCameraMatrix;
+
+        out vec2 uv;
+
+        void main(void){
+            uv = a_uv;
+            gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position, 1.0);
+        }
+    </script>
+    <script id="fragment_shader" type="x-shader/x-fragment">#version 300 es
+        precision mediump float;
+
+        in vec2 uv;
+        out vec4 finalColor;
+
+        void main(void){
+            // Square Border
+            float c = (uv.x <= 0.1 || uv.x >= 0.9 || uv.y <= 0.1 || uv.y >= 0.9)? 0.0 : 1.0;
+            finalColor = vec4(c, c, c, 1.0 - c);
+
+            // Circle
+            /*
+            vec2 delta = uv - vec2(0.5, 0.5); // delta position from center
+            float dist = 0.5 - sqrt(delta.x*delta.x + delta.y*delta.y);
+
+            float border = 0.01;
+            float a = 0.0;
+            if(dist > border) a = 1.0;
+            else if(dist > 0.0) a = dist / border;
+
+            finalColor = vec4(0.0, 0.0, 0.0, a);
+            */
+        }
+    </script>
+</body>
+
+</html>
