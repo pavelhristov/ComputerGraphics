@@ -45,7 +45,7 @@ Primitives.MultiQuad = class {
             aVert.push(x + dx, y + half, z + dy);       // TOP RIGHT
 
             aUV.push(0, 0, 0, 1, 1, 1, 1, 0);           // Quad's UV
-            aIndex.push(p, p + 1, p + 2, p + 3, p);     // Quad's Index
+            aIndex.push(p, p + 1, p + 2, p + 2, p + 3, p);     // Quad's Index
         }
 
         let mesh = gl.fCreateMeshVAO('MultiQuad', aIndex, aVert, null, aUV);

@@ -92,12 +92,12 @@ function GLInstance(canvasId) {
 
         // Setup Index
         if (aryInd !== undefined && aryInd != null) {
-            rtn.bufIndex = this.createBuffer();
-            rtn.IndexCount = aryInd.length;
-            this.bindBuffer(this.ELEMENT_ARRAY_BUFFER, rtn.bufIndex);
-            this.bufferData(this.ELEMENT_ARRAY_BUFFER, new Uint16Array(aryInd), this.STATIC_DRAW);
-            // this.bindBuffer(this.ELEMENT_ARRAY_BUFFER, null);
-        }
+			rtn.bufIndex = this.createBuffer();
+			rtn.indexCount = aryInd.length;
+			this.bindBuffer(this.ELEMENT_ARRAY_BUFFER, rtn.bufIndex);
+			this.bufferData(this.ELEMENT_ARRAY_BUFFER, new Uint16Array(aryInd), this.STATIC_DRAW);
+			// this.bindBuffer(this.ELEMENT_ARRAY_BUFFER, null);
+		}
 
         // Clean up
         this.bindVertexArray(null); //Unbind the VAO, very Important. Always unbind when you are done using it.

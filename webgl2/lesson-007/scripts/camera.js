@@ -52,7 +52,7 @@ class Camera {
     // To have different modes of movements, this function handles the view matrix update for the transform object
     updateViewMatrix() {
         // Optimize camera transform update, no need for scale nor rotateZ
-        if (this.mode == Camera.MODE_ORBIT) {
+        if (this.mode == Camera.MODE_FREE) {
             this.transform.matView.reset()
                 .vtranslate(this.transform.position)
                 .rotateX(this.transform.rotation.x * Transform.deg2Rad)
