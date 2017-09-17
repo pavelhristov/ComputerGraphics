@@ -50,7 +50,7 @@ function onRender(dt) {
         .renderModal(gGridModal.preRender());
 
     gShader.activate()
-        // .preRender()
+        .preRender()
         .setCameraMatrix(gCamera.viewMatrix)
         .setTime(performance.now())
         .renderModal(gModal.preRender());
@@ -67,8 +67,8 @@ class TestShader extends Shader {
         this.uniformLocations.time = gl.getUniformLocation(this.program, 'uTime');
 
         let uColor = gl.getUniformLocation(this.program, 'uColor');
-        gl.uniform3fv(uColor, new Float32Array( GlUtil.rgbArray("#FF0000","00FF00","0000FF","909090","C0C0C0","404040") ));
-        
+        gl.uniform3fv(uColor, new Float32Array(GlUtil.rgbArray("#FF0000", "00FF00", "0000FF", "909090", "C0C0C0", "404040")));
+
         // Shaderd uniforms
         this.setPerspective(pMatrix);
 
@@ -77,7 +77,7 @@ class TestShader extends Shader {
     }
 
     setTime(t) {
-        this.gl.uniform1i(this.uniformLocations.time, t);
+        this.gl.uniform1f(this.uniformLocations.time, t);
         return this;
     }
 

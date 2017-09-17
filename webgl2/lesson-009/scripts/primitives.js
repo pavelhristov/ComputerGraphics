@@ -35,7 +35,7 @@ Primitives.CubeBad = class {
 
 Primitives.Cube = class {
     static createModal(gl) {
-        return new Modal(Primitives.Cube.createMesh(gl));
+        return new Modal(Primitives.Cube.createMesh(gl,1,1,1,0,0,0));
     }
 
     static createMesh(gl, width, height, depth, x, y, z) {
