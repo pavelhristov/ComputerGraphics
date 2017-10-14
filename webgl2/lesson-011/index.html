@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebGL2 play</title>
+    <link href="./css/main.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class='wrapper'>
+    <canvas id="surface" width="800" height="600">
+        Your browser does not support HTML5 canvas!
+    </canvas>
+    <img src="../shared/UV_Grid_Lrg.jpg" id="img-tex" hidden/>
+    
+    <!-- https://forums.epicgames.com/unreal-tournament-2003-2004/ut2004-level-editing-modeling-skinning/108243-my-skies-and-and-cliff-textures-large-images?506748-My-skies-and-and-cliff-textures-(large-images!)= -->
+    <img src="../shared/miramar_back.png" id="cube01-back" hidden/>
+    <img src="../shared/miramar_front.png" id="cube01-front" hidden/>
+    <img src="../shared/miramar_bottom.png" id="cube01-bottom" hidden/>
+    <img src="../shared/miramar_left.png" id="cube01-left" hidden/>
+    <img src="../shared/miramar_right.png" id="cube01-right" hidden/>
+    <img src="../shared/miramar_top.png" id="cube01-top" hidden/>
+    
+    <img src="../shared/grimmnight_back.png" id="cube02-back" hidden/>
+    <img src="../shared/grimmnight_front.png" id="cube02-front" hidden/>
+    <img src="../shared/grimmnight_bottom.png" id="cube02-bottom" hidden/>
+    <img src="../shared/grimmnight_left.png" id="cube02-left" hidden/>
+    <img src="../shared/grimmnight_right.png" id="cube02-right" hidden/>
+    <img src="../shared/grimmnight_top.png" id="cube02-top" hidden/>
+    </div>
+
+    <script type="text/javascript" src="./scripts/gl.js"></script>
+    <script type="text/javascript" src="./scripts/math.js"></script>
+    <script type="text/javascript" src="./scripts/shaders.js"></script>
+    <script type="text/javascript" src="./scripts/render-loop.js"></script>
+    <script type="text/javascript" src="./scripts/transform.js"></script>
+    <script type="text/javascript" src="./scripts/modal.js"></script>
+    <script type="text/javascript" src="./scripts/primitives.js"></script>
+    <script type="text/javascript" src="./scripts/camera.js"></script>
+    <script type="text/javascript" src="./scripts/shaders-extra.js"></script>
+    <script type="text/javascript" src="./scripts/obj-loader.js"></script>
+    <script type="text/javascript" src="./scripts/main.js"></script>
+
+    <script id="vertex_shader" type="x-shader/x-vertex">#version 300 es
+        in vec4 a_position; // Making it vec4, w is used for index from uColor
+        in vec3 a_norm;
+        in vec2 a_uv;
+        
+        uniform mat4 uPMatrix;
+        uniform mat4 uMVMatrix;
+        uniform mat4 uCameraMatrix;
+
+        //uniform vec3 uColor[6];
+        //uniform float uTime;
+
+        //out lowp vec4 color;
+        out highp vec2 texCoord; // Interpolate UV values to the fragment shader
+
+        // vec3 warp(vec3 p){
+            // return p + 0.2 * abs(cos(uTime*0.002)) * a_norm;
+            // return p + 0.5 * abs(cos(uTime*0.003 + p.y)) * a_norm;
+            // return p + 0.5 * abs(cos(uTime*0.003 + p.y*2.0 + p.x*2.0 + p.z)) * a_norm;
+        // }
+
+        void main(void){
+            texCoord = a_uv;
+            // color = vec4(uColor[int(a_position.w)], 1.0);
+            // gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(warp(a_position.xyz), 1.0);
+            gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position.xyz, 1.0);
+        }
+    </script>
+    <script id="fragment_shader" type="x-shader/x-fragment">#version 300 es
+        precision mediump float;
+
+        // in vec4 color;
+        in highp vec2 texCoord; // What pixel to pull from the texture
+        uniform sampler2D uMainTex; // Holds the texture loaded to the GPU
+        
+        out vec4 finalColor;
+
+        void main(void){ // Confusing that UV's coords are s,t but works like x,y
+           // finalColor = color;
+           // finalColor = texture(uMainTex, vec2(texCoord.s, texCoord.t)); // Get the color of the pixel at the UV location
+           // finalColor = mix(color,texture(uMainTex, texCoord), 0.8f);
+           finalColor = texture(uMainTex, texCoord);
+        }
+    </script>
+    <script id="sky-vertex-shader" type="x-shader/x-vertex">#version 300 es
+        in vec4 a_position;
+        in vec2 a_uv;
+
+        uniform mat4 uPMatrix;
+        uniform mat4 uMVMatrix;
+        uniform mat4 uCameraMatrix;
+
+        out highp vec3 texCoord; // Interpolate UV values to the fragment shader
+
+        void main(void){
+            texCoord = a_position.xyz;
+            gl_Position = uPMatrix * uCameraMatrix * vec4(a_position.xyz, 1.0);
+        }
+    </script>
+    <script id="sky-fragment-shader" type="x-shader/x-fragment">#version 300 es
+        precision mediump float;
+
+        in highp vec3 texCoord;
+        uniform samplerCube uDayTex;
+        uniform samplerCube uNightTex;
+        uniform float uTime;
+
+        out vec4 finalColor;
+        void main(void){
+            finalColor = mix(texture(uDayTex, texCoord), texture(uNightTex,texCoord), abs(sin(uTime * 0.0005)));
+        }
+    </script>
+    <script id="obj-file" type="text/plain">
+# Blender v2.76 (sub 0) OBJ File: 'cube.blend'
+# www.blender.org
+mtllib cube.mtl
+o Cube
+v 1.000000 -1.000000 -1.000000
+v 1.000000 -1.000000 1.000000
+v -1.000000 -1.000000 1.000000
+v -1.000000 -1.000000 -1.000000
+v 1.000000 1.000000 -0.999999
+v 0.999999 1.000000 1.000001
+v -1.000000 1.000000 1.000000
+v -1.000000 1.000000 -1.000000
+vt 1.000000 1.000000
+vt 0.000000 1.000000
+vt 0.000000 0.000000
+vt 1.000000 0.000000
+vn 0.000000 -1.000000 0.000000
+vn 0.000000 1.000000 0.000000
+vn 1.000000 0.000000 0.000000
+vn -0.000000 0.000000 1.000000
+vn -1.000000 -0.000000 -0.000000
+vn 0.000000 0.000000 -1.000000
+usemtl Material
+s off
+f 2/1/1 3/2/1 4/3/1
+f 8/2/2 7/3/2 6/4/2
+f 5/1/3 6/2/3 2/3/3
+f 6/1/4 7/2/4 3/3/4
+f 3/4/5 7/1/5 8/2/5
+f 1/3/6 4/4/6 8/1/6
+f 1/4/1 2/1/1 4/3/1
+f 5/1/2 8/2/2 6/4/2
+f 1/4/3 5/1/3 2/3/3
+f 2/4/4 6/1/4 3/3/4
+f 4/3/5 3/4/5 8/2/5
+f 5/2/6 1/3/6 8/1/6
+</script>
+</body>
+
+</html>
