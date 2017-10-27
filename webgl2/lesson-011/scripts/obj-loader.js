@@ -91,7 +91,7 @@ class ObjLoader {
                             fNorm.push(cNorm[ind], cNorm[ind + 1], cNorm[ind + 2]);
 
                             // Parse texture if available and save final version ordered correctly by index
-                            if (ary[i] != '') {
+                            if (ary[1] != '') {
                                 ind = (parseInt(ary[1]) - 1) * 2;
                                 fUV.push(cUV[ind], (!flipYUV) ? cUV[ind + 1] : 1 - cUV[ind + 1]);
                             }
