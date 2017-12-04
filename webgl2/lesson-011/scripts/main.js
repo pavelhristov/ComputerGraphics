@@ -21,7 +21,7 @@ window.addEventListener('load', function () {
 
     //--------------------------------------------------------------------------------------------------------------
     // Load resources
-    gl.fLoadTexture('tex001', document.getElementById('img-tex'));
+    gl.fLoadTexture('tex001', document.getElementById('img-tex2'));
 
     gl.fLoadCubeMap('skybox01', [
         document.getElementById('cube01-right'),
@@ -55,7 +55,7 @@ window.addEventListener('load', function () {
     // gModal = Primitives.Cube.createModal(gl);
     // gModal.setPosition(0, 0.6, 0);
 
-    gModal2 = new Modal(ObjLoader.domToMesh('objCube', 'obj-file', true));
+    gModal2 = new Modal(ObjLoader.domToMesh('objCube', 'obj-file2', true));
     gModal2.setPosition(0, 0.6, 0).setScale(0.5, 0.5, 0.5);
 
     // gSkyMap = new Modal(Primitives.Cube.createMesh(gl, 'SkyMap', 10, 10, 10, 0, 0, 0));

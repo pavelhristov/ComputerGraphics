@@ -9,9 +9,8 @@ class ObjLoader {
     }
 
     static parseObjText(text, flipYUV) {
-        text = text.trim() + '\r\n'; // add new line to be able to access last line in the for loop
+        text = text.trim() + '\n'; // add new line to be able to access last line in the for loop
 
-        let line; // line text from obj file
         let itm; // line split into an array
         let ary; // itm split into an array, used for face decoding
         let i;
@@ -26,13 +25,15 @@ class ObjLoader {
         let fUV = []; // final index sorted uv array
         let fIndex = []; //final sorted index array
         let fIndexCount = 0; // final count of unique vertices
-        let posA = 0;
-        let posB = text.indexOf('\r\n', 0);
 
-        while (posB > posA) {
-            line = text.substring(posA, posB).trim();
+        let lines = text.split('\n');
+        console.log(lines[0]);
+        console.log(lines[10]);
 
-            switch (line.charAt(0)) {
+        lines.forEach(element => {
+            let item = element.trim().split(' ');
+            
+            switch (item[0]) {
                 //--------------------------------------------------
                 // Cache vertex data for index processing when going through face data
                 // simple data (x, y, z)
@@ -40,19 +41,16 @@ class ObjLoader {
                 // vt 0.000000 0.666667
                 // vn 0.000000 0.000000 -1.000000
                 case 'v':
-                    itm = line.split(' ');
-                    itm.shift();
-                    switch (line.charAt(1)) {
-                        case ' ':
-                            cVert.push(parseFloat(itm[0]), parseFloat(itm[1]), parseFloat(itm[2]));
-                            break;
-                        case 't':
-                            cUV.push(parseFloat(itm[0]), parseFloat(itm[1]));
-                            break;
-                        case 'n':
-                            cNorm.push(parseFloat(itm[0]), parseFloat(itm[1]), parseFloat(itm[2]));
-                            break;
-                    }
+                    cVert.push(parseFloat(item[1]), parseFloat(item[2]), parseFloat(item[3]));
+                    break;
+                    
+                case 'vt':
+                    cUV.push(parseFloat(item[1]), parseFloat(item[2]));
+                    break;
+
+                case 'vn':
+                    cNorm.push(parseFloat(item[1]), parseFloat(item[2]), parseFloat(item[3]));
+                    break;
 
                 //--------------------------------------------------
                 // Porcess face data
@@ -62,7 +60,7 @@ class ObjLoader {
                 // f 34/41/36 34/41/35 34/41/36
                 // f 34//36 34//35 34//36
                 case 'f':
-                    itm = line.split(' ');
+                    itm = item;
                     itm.shift();
                     isQuad = false;
 
@@ -112,11 +110,7 @@ class ObjLoader {
                     }
                 break;
             }
-
-            // Get ready to parse the next line of the obj data.
-            posA = posB + 1;
-            posB = text.indexOf('\r\n', posA);
-        }
+        });
         
         return [fIndex, fVert, fNorm, fUV];
     }
