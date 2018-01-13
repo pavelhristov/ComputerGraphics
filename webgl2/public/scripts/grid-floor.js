@@ -52,7 +52,7 @@ class GridFloor {
     }
 
     render(camera) {
-        //Update Transform Matrix (Modal View)
+        //Update Transform Matrix (Model View)
         this.transform.updateMatrix();
 
         //Prepare Shader

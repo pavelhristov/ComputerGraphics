@@ -106,7 +106,7 @@ class VertexDebugger {
     }
 
     render(camera) {
-        // Update Transform Matrix (Modal View)
+        // Update Transform Matrix (Model View)
         this.transform.updateMatrix();
 
         // Start up the Shader

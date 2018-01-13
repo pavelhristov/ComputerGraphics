@@ -1,4 +1,4 @@
-class Modal {
+class Model {
     constructor(meshData) {
         this.transform = new Transform();
         this.mesh = meshData;

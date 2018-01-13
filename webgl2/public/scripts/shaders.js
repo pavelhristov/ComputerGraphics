@@ -221,8 +221,8 @@ class Shader {
         return this;
     }
 
-    setModalMatrix(matData) {
-        this.gl.uniformMatrix4fv(this.uniformLocations.modalMatrix, false, matData);
+    setModelMatrix(matData) {
+        this.gl.uniformMatrix4fv(this.uniformLocations.modelMatrix, false, matData);
         return this;
     }
 
@@ -246,31 +246,31 @@ class Shader {
     // Setup custom properties
     preRender() { } // abstract method
 
-    renderModal(modal) {
-        this.setModalMatrix(modal.transform.getViewMatrix()); // Set the transform, so the shader knows where the modal exists in 3d space
-        this.gl.bindVertexArray(modal.mesh.vao); // Enable VAO, this will set all the predefined attributes for the shader
+    renderModel(model) {
+        this.setModelMatrix(model.transform.getViewMatrix()); // Set the transform, so the shader knows where the model exists in 3d space
+        this.gl.bindVertexArray(model.mesh.vao); // Enable VAO, this will set all the predefined attributes for the shader
 
-        if (modal.mesh.noCulling) {
+        if (model.mesh.noCulling) {
             this.gl.disable(this.gl.CULL_FACE);
         }
 
-        if (modal.mesh.doBlending) {
+        if (model.mesh.doBlending) {
             this.gl.enable(this.gl.BLEND);
         }
 
-        if (modal.mesh.indexCount) {
-            this.gl.drawElements(modal.mesh.drawMode, modal.mesh.indexCount, gl.UNSIGNED_SHORT, 0);
+        if (model.mesh.indexCount) {
+            this.gl.drawElements(model.mesh.drawMode, model.mesh.indexCount, gl.UNSIGNED_SHORT, 0);
         } else {
-            this.gl.drawArrays(modal.mesh.drawMode, 0, modal.mesh.vertexCount);
+            this.gl.drawArrays(model.mesh.drawMode, 0, model.mesh.vertexCount);
         }
 
         // Cleanup
         this.gl.bindVertexArray(null);
-        if (modal.mesh.noCulling) {
+        if (model.mesh.noCulling) {
             this.gl.enable(this.gl.CULL_FACE);
         }
 
-        if (modal.mesh.doBlending) {
+        if (model.mesh.doBlending) {
             this.gl.disable(this.gl.BLEND);
         }
 
@@ -408,7 +408,7 @@ class ShaderUtil {
     static getStandardUniformLocations(gl, program) {
         return {
             perspective: gl.getUniformLocation(program, 'uPMatrix'),
-            modalMatrix: gl.getUniformLocation(program, 'uMVMatrix'),
+            modelMatrix: gl.getUniformLocation(program, 'uMVMatrix'),
             cameraMatrix: gl.getUniformLocation(program, 'uCameraMatrix'),
             mainTexture: gl.getUniformLocation(program, 'uMainTex')
         }

@@ -1,8 +1,8 @@
 let Primitives = {};
 
 Primitives.CubeBad = class {
-    static createModal(gl) {
-        return new Modal(Primitives.CubeBad.createMesh(gl));
+    static createModel(gl) {
+        return new Model(Primitives.CubeBad.createMesh(gl));
     }
 
     static createMesh(gl) {
@@ -34,8 +34,8 @@ Primitives.CubeBad = class {
 }
 
 Primitives.Cube = class {
-    static createModal(gl, name) {
-        return new Modal(Primitives.Cube.createMesh(gl,name || 'Cube',1,1,1,0,0,0));
+    static createModel(gl, name) {
+        return new Model(Primitives.Cube.createMesh(gl,name || 'Cube',1,1,1,0,0,0));
     }
 
     static createMesh(gl, name, width, height, depth, x, y, z) {
@@ -114,8 +114,8 @@ Primitives.Cube = class {
 
 
 Primitives.Quad = class {
-    static createModal(gl) {
-        return new Modal(Primitives.Quad.createMesh(gl));
+    static createModel(gl) {
+        return new Model(Primitives.Quad.createMesh(gl));
     }
 
     static createMesh(gl) {
@@ -130,8 +130,8 @@ Primitives.Quad = class {
 }
 
 Primitives.MultiQuad = class {
-    static createModal(gl) {
-        return new Modal(Primitives.MultiQuad.createMesh(gl));
+    static createModel(gl) {
+        return new Model(Primitives.MultiQuad.createMesh(gl));
     }
 
     static createMesh(gl) {
@@ -169,8 +169,8 @@ Primitives.MultiQuad = class {
 }
 
 Primitives.GridAxis = class {
-    static createModal(gl, inculdeAxis) {
-        return new Modal(Primitives.GridAxis.createMesh(gl, inculdeAxis));
+    static createModel(gl, inculdeAxis) {
+        return new Model(Primitives.GridAxis.createMesh(gl, inculdeAxis));
     }
     static createMesh(gl, includeAxis) {
         let verts = [];

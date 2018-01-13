@@ -42,7 +42,7 @@ function onReady() {
         .setUniforms('uPMatrix', gCamera.projectionMatrix)
     //,'uFaces', [8,0, 8,0, 8,0, 10,0, 8,0, 9,0]); // front, back, left, bottom, right, top
 
-    gModel = Primitives.Cube.createModal(gl, 'Cube', true)
+    gModel = Primitives.Cube.createModel(gl, 'Cube', true)
         .setPosition(0, 0.6, 0); //.setScale(0.7, 0.7, 0.7);
 
     //-------------------------------------------------------------------------------------------
