@@ -141,9 +141,15 @@ function GLInstance(canvasId) {
         this.mMeshCache[name] = rtn;
         return rtn;
     }
+    
+    gl.fLoadTexture = function (name, img, doYFlip, noMips) {
+        let texture = this.createTexture();
+        this.mTextureCache[name] = texture;
+        return this.fUpdateTexture(name, img, doYFlip, noMips);
+    }
 
-    gl.fLoadTexture = function (name, img, doYFlip) {
-        let tex = this.createTexture();
+    gl.fUpdateTexture = function (name, img, doYFlip, noMips) {
+        let tex = this.mTextureCache[name];
         if (doYFlip) {
             this.pixelStorei(this.UNPACK_FLIP_Y_WEBGL, true); // Flip texture by the Y position
         }
@@ -151,12 +157,18 @@ function GLInstance(canvasId) {
         this.bindTexture(this.TEXTURE_2D, tex); // Setup texture buffer
         this.texImage2D(this.TEXTURE_2D, 0, this.RGBA, this.RGBA, this.UNSIGNED_BYTE, img); // Push image to GPU
 
+        if(!noMips){
         this.texParameteri(this.TEXTURE_2D, this.TEXTURE_MAG_FILTER, this.LINEAR); // Setup up scaling
         this.texParameteri(this.TEXTURE_2D, this.TEXTURE_MIN_FILTER, this.LINEAR_MIPMAP_NEAREST); // Setup down scaling
         this.generateMipmap(this.TEXTURE_2D); // Precalc different sizes of texture for better quality rendering
+        }else{
+            this.texParameteri(this.TEXTURE_2D, this.TEXTURE_MAG_FILTER, this.NEAREST);
+            this.texParameteri(this.TEXTURE_2D, this.TEXTURE_MIN_FILTER, this.NEAREST);
+            this.texParameteri(this.TEXTURE_2D, this.TEXTURE_WRAP_S, this.CLAMP_TO_EDGE);
+            this.texParameteri(this.TEXTURE_2D, this.TEXTURE_WRAP_T, this.CLAMP_TO_EDGE);
+        }
 
         this.bindTexture(this.TEXTURE_2D, null); // Unbind
-        this.mTextureCache[name] = tex; // Save ID for later unloading
 
         if (doYFlip === true) {
             this.pixelStorei(this.UNPACK_FLIP_Y_WEBGL, false); // Stop flipping textures

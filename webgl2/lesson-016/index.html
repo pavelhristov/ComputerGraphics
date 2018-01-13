@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebGL2 play</title>
+    <link href="../shared/css/main.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class='wrapper'>
+        <canvas id="surface" width="800" height="600">
+            Your browser does not support HTML5 canvas!
+        </canvas>
+    </div>
+
+    <script type="text/javascript" src="./scripts/gl.js"></script>
+    <script type="text/javascript" src="./scripts/math.js"></script>
+    <script type="text/javascript" src="./scripts/shaders.js"></script>
+    <script type="text/javascript" src="./scripts/render-loop.js"></script>
+    <script type="text/javascript" src="./scripts/transform.js"></script>
+    <script type="text/javascript" src="./scripts/modal.js"></script>
+    <script type="text/javascript" src="./scripts/primitives.js"></script>
+    <script type="text/javascript" src="./scripts/camera.js"></script>
+    <script type="text/javascript" src="./scripts/shaders-extra.js"></script>
+    <!-- <script type="text/javascript" src="./scripts/obj-loader.js"></script> -->
+    <script type="text/javascript" src="./scripts/grid-floor.js"></script>
+    <script type="text/javascript" src="./scripts/debug.js"></script>
+    <script type="text/javascript" src="./scripts/resources.js"></script>      
+    <script type="text/javascript" src="./scripts/main.js"></script>
+
+    <script id="vertex_shader" type="x-shader/x-vertex">#version 300 es
+        in vec4 a_position;
+        in vec3 a_norm;
+        in vec2 a_uv;
+        
+        uniform mat4 uPMatrix;
+        uniform mat4 uMVMatrix;
+        uniform mat4 uCameraMatrix;
+        
+        out highp vec2 vUV;
+
+        void main(void){
+            vUV = vec2(a_uv.x, a_uv.y * 0.5);
+            gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position.xyz, 1.0);
+        }
+    </script>
+    <script id="fragment_shader" type="x-shader/x-fragment">#version 300 es
+        precision mediump float;
+
+        uniform sampler2D uTex;
+        
+        in highp vec2 vUV;
+
+        out vec4 outColor;
+
+        void main(void){
+            outColor = texture(uTex, vUV);
+        }
+    </script>
+</body>
+
+</html>

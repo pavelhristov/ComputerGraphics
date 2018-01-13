@@ -20,7 +20,7 @@ window.addEventListener('load', function () {
     //--------------------------------------------------------------------------------------------------------------
     // Load resources
     Resources.setup(gl, onReady)
-        .loadTexture('atlas', '../../shared/atlas_minecraft.png')
+        .loadVideoTexture('vid', '../../shared/shark_3d_360.mp4')
         .start();
 
     // Grid floor
@@ -37,20 +37,13 @@ function onReady() {
     gShader = new ShaderBuilder(gl, 'vertex_shader', 'fragment_shader', true)
         .prepareUniforms('uPMatrix', 'mat4',
         'uMVMatrix', 'mat4',
-        'uCameraMatrix', 'mat4',
-        'uFaces', '2fv')
-        .prepareTextures('uAtlas', 'atlas')
+        'uCameraMatrix', 'mat4')
+        .prepareTextures('uTex', 'vid')
         .setUniforms('uPMatrix', gCamera.projectionMatrix)
     //,'uFaces', [8,0, 8,0, 8,0, 10,0, 8,0, 9,0]); // front, back, left, bottom, right, top
 
-    // gModel = Primitives.Cube.createModal(gl, 'Cube', true)
-    //     .setPosition(0, 0.6, 0); //.setScale(0.7, 0.7, 0.7);
-
-    let cubeMesh = Primitives.Cube.createMesh(gl, 'Cube', 1, 1, 1, 0, 0, 0, false);
-    for (let i = 0; i < 6; i++) {
-        let model = new Modal(cubeMesh).setPosition((i % 3) * 2, 0.6, Math.floor(i / 3) * -2);
-        gCubes.push(model);
-    }
+    gModel = Primitives.Cube.createModal(gl, 'Cube', true)
+        .setPosition(0, 0.6, 0); //.setScale(0.7, 0.7, 0.7);
 
     //-------------------------------------------------------------------------------------------
     // Start rendering
@@ -73,14 +66,11 @@ function onRender(dt) {
 
     gGridFloor.render(gCamera);
 
+    gl.fUpdateTexture('vid', Resources.Videos['vid'], false, true)
+
     //--------------------------------------------------------
     // Draw out models
     gShader
         .preRender('uCameraMatrix', gCamera.viewMatrix)
-        //.renderModel(gModel.preRender(), false);
-    
-    for(let i=0; i<gCubes.length; i+=1){
-        gShader.setUniforms('uFaces',textMap[i])
-            .renderModel(gCubes[i].preRender());
-    }
+        .renderModel(gModel.preRender(), false);
 }
